@@ -1,0 +1,18 @@
+Baserock definitions -> CMake build instructions
+================================================
+
+What?
+-----
+
+This is a proof of concept 'Baserock exporter'. Given some build/integration
+instructions represented as [Baserock
+definitions](https://wiki.baserock.org/definitions), such as the [Baserock
+reference system
+definitions](https://git.baserock.org/cgi-bin/cgit.cgi/baserock/baserock/definitions.git/tree),
+it will generate [CMake](https://www.cmake.org) build instructions, from which
+you can then generate a Makefile or [Ninja build rule file](http://www.ninja-build.org)
+that will do the actual compilation and build you a Baserock system.
+
+It's just a proof of concept at this point and it may not have any use.
+It would be interesting to compare this with Buildroot, another Make-based
+build/integration tool.
