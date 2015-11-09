@@ -73,6 +73,8 @@ def format_cmake_command(command, args = [], keyword_args = {}):
 
 def write_cmake_target_for_source(source, cmakelists_stream, scripts_dir):
     def resolve_repo_alias(repo_url):
+        # See "Definitions File Syntax -- Repo URLs" at
+        # <http://wiki.baserock.org/definitions/current/#index5h3>
         mapping = {
             'baserock:': '${GIT_BASEROCK}/',
             'upstream:': '${GIT_UPSTREAM}/',
@@ -112,14 +114,19 @@ def write_cmake_target_for_source(source, cmakelists_stream, scripts_dir):
     keyword_args['GIT_TAG'] = source.sha1
 
     for step in ['configure', 'build', 'install']:
+        keyword = '%s_COMMAND' % step.upper()
         sequence = command_sequence(source, step)
-        if len(sequence) > 0:
+        if len(sequence) == 0:
+            # If we don't supply any command, the default is to try and
+            # configure/build/install with CMake, rather than to do nothing.
+            keyword_args[keyword] = 'echo no-op'
+        else:
             command = ' && '.join(sequence)
             if can_inline_command_in_cmake(command):
-                keyword_args['%s_COMMAND' % step.upper()] = command
+                keyword_args[keyword] = command
             else:
                 script_name = '%s-%s.sh' % (source.name, step)
-                keyword_args['%s_COMMAND' % step.upper()] = script_name
+                keyword_args[keyword] = 'sh ${CMAKE_CURRENT_SOURCE_DIR}/' + script_name
                 with open(os.path.join(scripts_dir, script_name), 'w') as f:
                     f.write('# %s commands for %s\n' % (step, source.name))
                     for command in sequence:
