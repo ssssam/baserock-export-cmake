@@ -16,3 +16,19 @@ that will do the actual compilation and build you a Baserock system.
 It's just a proof of concept at this point and it may not have any use.
 It would be interesting to compare this with Buildroot, another Make-based
 build/integration tool.
+
+Does it work?
+-------------
+
+Not really.
+
+The generated build system creates a couple of syntax warnings when run through
+CMake.
+
+Then, the build of fhs-dirs fails because none of the necessary environment
+variables are set.
+
+Next steps would be:
+
+	- set PREFIX and DESTDIR correctly during build and install
+	- add an `artifact creation` step after installation
