@@ -57,7 +57,8 @@ def format_cmake_command(command, args = [], keyword_args = {}):
     def escape(string):
         return string.replace('\\', '\\\\')
 
-    first_line = ' '.join([command + '('] + [escape(arg) for arg in args])
+    first_line = command + '('
+    first_line += ' '.join(escape(arg) + ' ' for arg in args).strip()
 
     if len(keyword_args) == 0:
         first_line += ')\n'
